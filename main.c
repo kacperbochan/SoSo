@@ -55,6 +55,24 @@ void * Auto(void *numer){
 
 int main(int argc, char** argv)
 {
+    //pobieranie liczby aut
+    int car_number = atoi(argv[1]);
+    int* liczby = (int*)malloc(sizeof(int)*car_number);
+    //wszystkie auta czekają ze strony A
+    a_chilluje = car_number; 
+
+    pthread_t cars[car_number];
+
+    for(int i = 0; i<car_number; i++){
+        liczby[i] = i;
+        int result = pthread_create(&cars[i], NULL, Auto, &liczby[i]);
+        if (result != 0) { perror("Could not create thread."); }
+    }
+    for(int i = 0; i<car_number; i++){
+        int result = pthread_join(cars[i], NULL);
+        if (result != 0) { perror("Could not create thread."); }
+    }
     
+    printf("Hello\n");
     return 0;
 }
