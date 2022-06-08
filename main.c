@@ -53,10 +53,25 @@ void * Auto(void *numer){
     unlock(mutex_most);
 }
 
+
 int main(int argc, char** argv)
 {
+    //sprawdzenie czy przyjeliśmy tylko jeden argument
+    if(argc > 2)    {
+        perror("You can't put more than 1 argument.");
+        exit(EXIT_FAILURE);
+    }
+    
+    
     //pobieranie liczby aut
     int car_number = atoi(argv[1]);
+    
+    //sprawdzenie czy liczba jest większa od 0
+    if(car_number < 1)    {
+        perror("Car number cannot be less than 1.");
+        exit(EXIT_FAILURE);
+    }
+
     int* liczby = (int*)malloc(sizeof(int)*car_number);
     //wszystkie auta czekają ze strony A
     a_chilluje = car_number; 
@@ -73,6 +88,5 @@ int main(int argc, char** argv)
         if (result != 0) { perror("Could not create thread."); }
     }
     
-    printf("Hello\n");
     return 0;
 }
