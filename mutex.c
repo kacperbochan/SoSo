@@ -1,8 +1,35 @@
 #include "mutex.h"
 
 //wyświetla obecny stan miast i mostu
-void display()
+void display(char color)
 {
+    switch(color){//dodano możliwość kolorowania tekstu w celu rozróżnienia 
+        case 0://czarny
+           printf("\033[1;30m");
+        break;
+        case 1://czerwony
+           printf("\033[1;31m");
+        break;
+        case 2://zielony
+           printf("\033[1;32m");
+        break;
+        case 3://żółty
+           printf("\033[1;33m");
+        break;
+        case 4://niebieski
+           printf("\033[1;34m");
+        break;
+        case 5://fioletowy
+           printf("\033[1;35m");
+        break;
+        case 6://cyjan
+           printf("\033[1;36m");
+        break;
+        case 7://biały
+           printf("\033[1;37m");
+        break;        
+    }
+    
     if(car_on_bridge == -1)
     {
         printf("A-%d %d>>> [>><<] <<<%d %d-B\n", a_chilluje, a_czeka, b_czeka, b_chilluje);
@@ -12,6 +39,8 @@ void display()
         printf("A-%d %d>>> [>> %d >>] <<<%d %d-B\n", a_chilluje, a_czeka, car_on_bridge, b_czeka, b_chilluje);
     else
         printf("A-%d %d>>> [<< %d <<] <<<%d %d-B\n", a_chilluje, a_czeka, car_on_bridge, b_czeka, b_chilluje);
+
+     printf("\033[0m");//reset koloru
 }
 
 //funkcja nadzorująca przebywanie samochodu w mieście po podanej stronie,
@@ -34,7 +63,7 @@ void city(char strona){
             b_chilluje--;
             b_czeka++;
         }
-        display();
+        display(3);//informacja w kolorze żółtym
     pthread_mutex_unlock(&mutex_dane);
 }
 
@@ -51,7 +80,7 @@ void przejazd(){
             a_czeka--;
         else
             b_czeka--;
-        display();
+        display(6);//informacja w kolorze cyjan
     pthread_mutex_unlock(&mutex_dane);
     
     //funkcja symuluje czas przejazdu samochodu od 1 do 4 sekund
@@ -64,7 +93,7 @@ void przejazd(){
             b_chilluje++;
         else
             a_chilluje++;
-        display();
+        display(2);//informacja w kolorze zielonym
     pthread_mutex_unlock(&mutex_dane);
 }
 
@@ -73,7 +102,7 @@ void *Auto(void *numer){
 	int* num = (int *) numer;
     char strona = 0; //0-A 1-B
 
-    printf("dolacza -%d \n ", *num);
+    printf("dolacza -%d\n", *num);
 	
 	while(1){
 		
