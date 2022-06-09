@@ -105,7 +105,7 @@ void *CondAuto(void *numer){
 	int* num = (int *) numer;
     char strona = 0; //0-A 1-B
 
-    printf("dolacza -%d \n ", *num);
+    printf("dolacza -%d\n", *num);
 	
 	while(1){
 		
