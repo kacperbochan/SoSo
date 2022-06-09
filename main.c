@@ -24,6 +24,9 @@ int main(int argc, char** argv)
     car_on_bridge = -1; 
 
     pthread_t cars[car_number];
+    //pthread_t bridge;
+
+    
 
     for(int i = 0; i<car_number; i++){
         liczby[i] = i;
