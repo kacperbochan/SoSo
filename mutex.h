@@ -7,9 +7,7 @@
 #include <pthread.h>
 
 void * Auto(void *numer);
-
 void * CondAuto(void *numer);
-void * Most();
 
 pthread_mutex_t mutex_most, mutex_dane;
 pthread_cond_t cond_most;

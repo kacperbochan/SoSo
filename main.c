@@ -4,7 +4,6 @@
 
 int main(int argc, char** argv)
 {
-
     if (pthread_mutex_init(&mutex_most, NULL) != 0)
     {
         printf("\n mutex init failed\n");
@@ -15,6 +14,7 @@ int main(int argc, char** argv)
         printf("\n mutex init failed\n");
         return 1;
     }
+    pthread_cond_init(&cond_most, NULL);
 
     //pobieranie liczby aut
     int car_number = atoi(argv[1]);
@@ -25,11 +25,6 @@ int main(int argc, char** argv)
 
     pthread_t cars[car_number];
     pthread_t bridge;
-
-    if ( pthread_create(&bridge, NULL, Most, NULL ) !=0)
-        { 
-            perror("Could not create thread most."); 
-        }
 
     for(int i = 0; i<car_number; i++){
         liczby[i] = i;
@@ -44,6 +39,5 @@ int main(int argc, char** argv)
         }
     }
     
-    printf("Hello\n");
     return 0;
 }

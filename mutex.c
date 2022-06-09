@@ -120,17 +120,6 @@ void *Auto(void *numer){
     }
 }
 
-void *Most(){
-    while(1){//most działa zawsze
-        if(car_on_bridge !=-1){//wykona się tylko jeśli mamy kogoś próbującego przejechać
-            pthread_mutex_lock(&mutex_most);//gdy tu wchodzimy oznacza to, że coś jedzie mostem
-                
-            pthread_mutex_unlock(&mutex_most);//zakończyliśmy przejazd mostem
-            pthread_cond_signal(&cond_most);//informujemy jeden z oczekujących wątków o dostępności mostu
-        }
-    }
-}
-
 void *CondAuto(void *numer){
 
 	int* num = (int *) numer;
@@ -152,5 +141,6 @@ void *CondAuto(void *numer){
             przejazd();
             strona ^= 1; //pojazd zmienił stronę
         pthread_mutex_unlock(&mutex_most);//koniec przejazdu - most się zwolnił
+        pthread_cond_signal(&cond_most);//informujemy jeden z oczekujących wątków o dostępności mostu
     }
 }
