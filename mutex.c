@@ -64,6 +64,8 @@ void city(char strona){
             b_czeka++;
         }
         display(3);//informacja w kolorze żółtym
+        if(a_chilluje == -1 || b_chilluje == -1)
+            printf("%d, %d", bridge_way, car_on_bridge);
     pthread_mutex_unlock(&mutex_dane);
 }
 
@@ -118,11 +120,11 @@ void *Auto(void *numer){
     }
 }
 
-void *CondMost(){
+void *Most(){
     while(1){//most działa zawsze
         if(car_on_bridge !=-1){//wykona się tylko jeśli mamy kogoś próbującego przejechać
             pthread_mutex_lock(&mutex_most);//gdy tu wchodzimy oznacza to, że coś jedzie mostem
-                przejazd();
+                
             pthread_mutex_unlock(&mutex_most);//zakończyliśmy przejazd mostem
             pthread_cond_signal(&cond_most);//informujemy jeden z oczekujących wątków o dostępności mostu
         }
@@ -147,7 +149,7 @@ void *CondAuto(void *numer){
             }
             car_on_bridge = *num;//oznaczamy który samochód przejeżdża
             bridge_way = strona;//oznaczamy w jakim kierunku przejeżdża (na bazie tego obierany jest kierunek strzałek w statusie oraz określa które dane będą edytowane)
-            
+            przejazd();
             strona ^= 1; //pojazd zmienił stronę
         pthread_mutex_unlock(&mutex_most);//koniec przejazdu - most się zwolnił
     }
