@@ -24,18 +24,24 @@ int main(int argc, char** argv)
     car_on_bridge = -1; 
 
     pthread_t cars[car_number];
-    //pthread_t bridge;
+    pthread_t bridge;
 
-    
+    if ( pthread_create(&bridge, NULL, Most, NULL ) !=0)
+        { 
+            perror("Could not create thread most."); 
+        }
 
     for(int i = 0; i<car_number; i++){
         liczby[i] = i;
-        int result = pthread_create(&cars[i], NULL, Auto, &liczby[i]);
-        if (result != 0) { perror("Could not create thread."); }
+        if ( pthread_create(&cars[i], NULL, CondAuto, &liczby[i]) != 0 ) 
+        { 
+            perror("Could not create thread auto."); 
+        }
     }
     for(int i = 0; i<car_number; i++){
-        int result = pthread_join(cars[i], NULL);
-        if (result != 0) { perror("Could not create thread."); }
+        if (pthread_join(cars[i], NULL) != 0) { 
+            perror("Could not join thread auto."); 
+        }
     }
     
     printf("Hello\n");
