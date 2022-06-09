@@ -106,7 +106,7 @@ void *Auto(void *numer){
 	
 	while(1){
 		
-        city(strona);
+        city(strona);//samochód jest w mieście, ale nie czeka jeszcze w kolejce
 
         //do momentu aż nie wejdzie do poniższej sekcji, stoi w kolejce
         pthread_mutex_lock(&mutex_most);//wejście tu oznacza rozpoczęcie przejazdu konkretnego samochodu przez most
