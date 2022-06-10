@@ -100,6 +100,7 @@ void przejazd(){
     pthread_mutex_unlock(&mutex_dane);
 }
 
+//funkcja auta na samych mutexach
 void *Auto(void *numer){
 
 	int* num = (int *) numer;
@@ -129,6 +130,7 @@ void *Auto(void *numer){
     }
 }
 
+//funkcja auta ze zmiennymi warunkowymi
 void *CondAuto(void *numer){
 
 	int* num = (int *) numer;
