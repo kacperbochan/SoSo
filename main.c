@@ -4,6 +4,12 @@
 
 int main(int argc, char** argv)
 {
+    //sprawdzenie czy przyjeliśmy tylko jeden argument
+    if (argc > 2) {
+        perror("You can't put more than 1 argument");
+        exit(EXIT_FAILURE);
+    }
+
     if (pthread_mutex_init(&mutex_most, NULL) != 0)
     {
         printf("\n mutex init failed\n");
@@ -18,6 +24,13 @@ int main(int argc, char** argv)
 
     //pobieranie liczby aut
     int car_number = atoi(argv[1]);
+    
+    //sprawdzenie czy podana liczba aut jest większa od 0
+    if (car_number < 1) {
+        perror("Car number cannot be less than 1");
+        exit(EXIT_FAILURE);
+    }
+
     int* liczby = (int*)malloc(sizeof(int)*car_number);
     //wszystkie auta czekają ze strony A
     a_chilluje = car_number;
