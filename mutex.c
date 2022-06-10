@@ -42,8 +42,8 @@ void display(char color)
     //jeśli jedzie z B do A
     else
         printf("A-%d %d>>> [<< %d <<] <<<%d %d-B\n", a_chilluje, a_czeka, car_on_bridge, b_czeka, b_chilluje);
-
-     printf("\033[0m");//reset koloru
+    
+    printf("\033[0m");//reset koloru
 }
 
 //funkcja nadzorująca przebywanie samochodu w mieście po podanej stronie,
@@ -119,8 +119,10 @@ void *Auto(void *numer){
 
         //do momentu aż nie wejdzie do poniższej sekcji, stoi w kolejce
         pthread_mutex_lock(&mutex_most);//wejście tu oznacza rozpoczęcie przejazdu konkretnego samochodu przez most
-            car_on_bridge = *num;//oznaczamy który samochód przejeżdża
-            bridge_way = strona;//oznaczamy w jakim kierunku przejeżdża (na bazie tego obierany jest kierunek strzałek w statusie oraz określa które dane będą edytowane)
+            pthread_mutex_lock(&mutex_dane);
+                car_on_bridge = *num;//oznaczamy który samochód przejeżdża
+                bridge_way = strona;//oznaczamy w jakim kierunku przejeżdża (na bazie tego obierany jest kierunek strzałek w statusie oraz określa które dane będą edytowane)
+            pthread_mutex_unlock(&mutex_dane);
             przejazd(strona);//pojazd przejeżdża przez most
             strona ^= 1; //pojazd zmienił stronę
         pthread_mutex_unlock(&mutex_most);//koniec przejazdu - most się zwolnił
@@ -146,14 +148,16 @@ void *CondAuto(void *numer){
 
         //do momentu aż nie wejdzie do poniższej sekcji, stoi w kolejce
         pthread_mutex_lock(&mutex_most);//wejście tu oznacza rozpoczęcie przejazdu konkretnego samochodu przez most
-            while(car_on_bridge !=-1){//dopóki most nie jest wolny
+            while(car_on_bridge != -1){//dopóki most nie jest wolny
                 pthread_cond_wait(&cond_most,&mutex_most);//czekaj na sygnał od innego wątku który oznaczał by zwolnienie się mostu
             }
-            car_on_bridge = *num;//oznaczamy który samochód przejeżdża
-            bridge_way = strona;//oznaczamy w jakim kierunku przejeżdża (na bazie tego obierany jest kierunek strzałek w statusie oraz określa które dane będą edytowane)
-            przejazd(); //samochód przejeżdża most
-            strona ^= 1; //pojazd zmienił stronę
+            pthread_mutex_lock(&mutex_dane);
+                car_on_bridge = *num;//oznaczamy który samochód przejeżdża
+                bridge_way = strona;//oznaczamy w jakim kierunku przejeżdża (na bazie tego obierany jest kierunek strzałek w statusie oraz określa które dane będą edytowane)
+            pthread_mutex_unlock(&mutex_dane);
         pthread_mutex_unlock(&mutex_most);//koniec przejazdu - most się zwolnił
+        przejazd(); //samochód przejeżdża most
+        strona ^= 1; //pojazd zmienił stronę
         pthread_cond_signal(&cond_most);//informujemy jeden z oczekujących wątków o dostępności mostu
     }
 }
